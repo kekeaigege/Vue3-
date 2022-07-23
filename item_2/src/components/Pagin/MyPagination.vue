@@ -16,29 +16,20 @@
 <script>
 export default {
   props: ["tableDataTotalLen", "tablePageSize"],
-  // props: {
-  //   total: {
-  //     type: Number,
-  //     default: 100,
-  //   },
-  //   pageSize: {
-  //     type: Number,
-  //     default: 'tableDataTotalLen',
-  //   },
-  // },
   data() {
     return {
       currentPage1: 1,
     };
   },
   methods: {
-    changePage(page) {
-      //数据量大进行分页处理
-      //获取的数据,长度等于total总长度 显示页面pageSize = 3
-      //需要对数组进行切割this.tableData = res.data.result.slice(0,3)
-    },
+    // changePage(page) {
+    //   //数据量大进行分页处理
+    //   //获取的数据,长度等于total总长度 显示页面pageSize = 3
+    //   //需要对数组进行切割this.tableData = res.data.result.slice(0,3)
+    // },
     handleSizeChange(number) {},
     handleCurrentChange(page) {
+      this.currentPage1 = page;
       this.$emit("changePage", page);
     },
   },

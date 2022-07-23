@@ -10,10 +10,8 @@
         />
       </div>
       <div class="searchBtnRight">
-        <el-button type="primary" @click="searchData(input)">查询</el-button>
-        <el-button type="success">
-          <router-link to="/addGoods" class="linkStyle">添加</router-link>
-        </el-button>
+        <el-button type="primary" @click="sendInputData(input)">查询</el-button>
+        <el-button type="success" @click="showAddDiolog()"> 添加 </el-button>
       </div>
     </div>
     <div class="table-bd">
@@ -45,12 +43,15 @@
         @changePage="changePage"
         :tableDataTotalLen="total"
         :tablePageSize="pageSize"
+        ref="fixIndex"
       ></MyPagination>
     </div>
+    <AddDialogPage v-show="addDiolog" @showAddDiolog="showAddDiolog"></AddDialogPage>
   </div>
 </template>
 <script>
 import MyPagination from "../../components/Pagin/MyPagination.vue";
+import AddDialogPage from "../../components/AddDialogPage.vue";
 import { reactive } from "vue";
 export default {
   setup() {
@@ -86,22 +87,26 @@ export default {
       pageSize: "",
       type: 0,
       list: [],
+      currentPage: 1,
+      addDiolog: false,
     };
   },
-  watch:{
-    input(newValue,oldValue){
-      if(newValue != oldValue){
-        this.getSearchData(newValue);
-      }
-    }
-  },
+  // watch: {
+  //   input(newValue, oldValue) {
+  //     if (newValue != oldValue) {
+  //       this.getSearchData(newValue);
+  //     }
+  //   },
+  // },
   //默认type等于0,默认是商品列表数据
   //type等于1时,代表是搜索页面数据
   created() {
-    this.initData(1);
+    this.initData(this.currentPage);
   },
-  updated() {},
   methods: {
+    showAddDiolog() {
+      this.addDiolog = !this.addDiolog;
+    },
     handleEdit(number, User) {
       console.log(index, row);
     },
@@ -109,13 +114,14 @@ export default {
       console.log(index, row);
     },
     changePage(pageIndex) {
+      //父组件修改子组件
       //此时拿到数据渲染页面,重新请求数据
       if (this.type == 0) {
+        this.currentPage = pageIndex;
         this.initData(pageIndex);
       } else if (this.type == 1) {
         this.tableData = this.list.slice((pageIndex - 1) * 3, pageIndex * 3);
       }
-
       //查询的应该是Search数组下面的
     },
     initData(page) {
@@ -143,6 +149,7 @@ export default {
         });
     },
     getSearchData(value) {
+      this.$refs.fixIndex.currentPage1 = 1;
       this.$http
         .getSearchList({
           search: value,
@@ -177,12 +184,14 @@ export default {
       if (value) {
         this.getSearchData(value);
       } else {
+        this.$refs.fixIndex.currentPage1 = 1;
         this.initData(1);
       }
     },
   },
   components: {
     MyPagination,
+    AddDialogPage,
   },
 };
 </script>
